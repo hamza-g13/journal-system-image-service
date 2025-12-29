@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1765193866140,
+    "patientId": 1,
+    "filename": "1765193866127-471129378.jpg",
+    "originalName": "1.jpg",
+    "format": "jpg",
+    "uploadDate": "2025-12-08T11:37:46.140Z",
+    "size": 3492,
+    "uploadedBy": "doctor_svensson"
+  },
+  {
+    "id": 1766890147793,
+    "patientId": 1,
+    "filename": "1766890147774-614199146.jpeg",
+    "originalName": "images.jpeg",
+    "format": "jpeg",
+    "uploadDate": "2025-12-28T02:49:07.793Z",
+    "size": 3968,
+    "uploadedBy": "doctor"
+  }
+]
