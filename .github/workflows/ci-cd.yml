@@ -1,0 +1,58 @@
+name: Image Service CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Node-appar behöver oftast ingen "build" om det inte är TypeScript/Frontend,
+      # men om du har ett build-script i package.json så kör vi det:
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Login to Docker Hub
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/journal-system-image-service:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/journal-system-image-service:latest
+
+  deploy:
+    needs: test-build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to CBH Cloud
+        run: |
+          # Byt ut DEPLOYMENT_ID när du skapat image-service i molnet
+          # curl -X POST "https://api.cloud.cbh.kth.se/deploy/v2/deployments/DITT_IMAGE_ID/command" \
+          # -H "X-Api-Key: ${{ secrets.KTH_CLOUD_API_KEY }}" \
+          # -H "Content-Type: application/json" \
+          # -d '{"command": "restart"}'
+          echo "Deploy step ready for ID"
