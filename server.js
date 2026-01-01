@@ -284,6 +284,14 @@ app.get('/health', (req, res) => {
     res.json({ status: 'UP', imagesCount: imagesDB.length });
 });
 
+app.get('/healthz', (req, res) => {
+    res.json({ status: 'UP', service: 'image-service' });
+});
+
+app.get('/', (req, res) => {
+    res.json({ status: 'UP', service: 'image-service' });
+});
+
 app.listen(PORT, () => {
     console.log(`Image Service running on port ${PORT}`);
 });
