@@ -32,3 +32,8 @@ docker-compose*
 # K8s
 k8s/
 *.yaml
+
+# Node.js
+node_modules/
+npm-debug.log
+.env
